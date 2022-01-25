@@ -3,16 +3,17 @@ import sys
 
 import pygame
 
+
 pygame.init()
+print('[!] инициализация pygame')
 pygame.display.set_caption('УРАЛМАШ')
 pygame.display.set_icon(pygame.image.load("data/icon.png"))
-size = width, height = 450, 350
+size = width, height = 450, 350  # размеры поля
 screen = pygame.display.set_mode(size)
 FPS = 20
-tile_width = tile_height = 50
-
-# выбранный уровень
-level = 0
+tile_width = tile_height = 50  # размеры клетки
+level = 0  # выбранный уровень
+music = True  # состояние музыки
 
 # музыка
 # sound_start = pg.mixer.Sound('data/start.mp3')
@@ -21,11 +22,19 @@ level = 0
 # sound_main.set_volume(0.5)
 
 
+# выход из программы
+def terminate():
+    print("[!] выход из программы")
+    pygame.quit()
+    sys.exit()
+
+
 # загрузка изображения
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
     if not os.path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
+        print(f"[!] файл с изображением '{fullname}' не найден")
+        print("[!] выход из программы")
         sys.exit()
     image = pygame.image.load(fullname)
     if colorkey is not None:
@@ -35,6 +44,7 @@ def load_image(name, colorkey=None):
         image.set_colorkey(colorkey)
     else:
         image = image.convert_alpha()
+    print(f'[#] загрузка изображения {name}')
     return image
 
 
@@ -43,31 +53,26 @@ def get_cell(mouse_pos):
     if 0 <= mouse_pos[0] <= tile_width * 9:
         if tile_width * 2 <= mouse_pos[1] <= tile_width * 7:
             return (mouse_pos[0] - 0) // tile_width, \
-                   (mouse_pos[1] - tile_width * 2) // tile_width
+                   (mouse_pos[1] - tile_height * 2) // tile_height
     return None
-
-
-# выход из программы
-def terminate():
-    pygame.quit()
-    sys.exit()
 
 
 # стартовое окно
 def start_screen():
     global level
+    print("[!] открытие стартового окна")
     intro_text = ["Добро пожаловать на УРАЛМАШ", "",
-                  "Чтобы выбрать уровень,",
-                  "нажмите «1», «2» или «3»", "",
-                  "Чтобы посмотреть статистику,",
-                  "нажмите «N»"]
+                  "Выбрать уровень — «1», «2», «3»",
+                  "Посмотреть управление — «F1»",
+                  "Посмотреть статистику — «F2»", "",
+                  "Приятной игры!"]
 
     fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
     screen.blit(fon, (0, 0))
-    font = pygame.font.Font(None, 30)
+    start_font = pygame.font.Font(None, 30)
     text_coord = 50
     for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color('white'))
+        string_rendered = start_font.render(line, 1, pygame.Color('white'))
         intro_rect = string_rendered.get_rect()
         text_coord += 10
         intro_rect.top = text_coord
@@ -84,14 +89,52 @@ def start_screen():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
                     level = 1
+                    print('[!] выбран 1 уровень')
                 elif event.key == pygame.K_2:
                     level = 2
+                    print('[!] выбран 2 уровень')
                 elif event.key == pygame.K_3:
                     level = 3
+                    print('[!] выбран 3 уровень')
+                elif event.key == pygame.K_F1:
+                    guide_screen()
             if level:
                 # sound_start.stop()
                 # sound_main.play()
                 return  # начинаем игру
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
+# окно управления
+def guide_screen():
+    print("[!] открытие окна управления")
+    intro_text = ["УПРАВЛЕНИЕ", "",
+                  "Выбор NPC — «1», «2», «3»",
+                  "Поставить NPC — «ЛКМ»",
+                  "Выкл/вкл музыку — «ПРОБЕЛ»",
+                  "Вернуться назад — «ESC»"]
+
+    fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
+    screen.blit(fon, (0, 0))
+    start_font = pygame.font.Font(None, 30)
+    text_coord = 50
+    for line in intro_text:
+        string_rendered = start_font.render(line, 1, pygame.Color('white'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    start_screen()
         pygame.display.flip()
         clock.tick(FPS)
 
@@ -102,7 +145,7 @@ tile_images = {
     'level3': load_image('netherite.png')
 }
 
-nps_images = {
+npc_images = {
     'cop': load_image('cop.png'),
     'sotochka': load_image('sotochka.png'),
     'sign': load_image('sign.png'),
@@ -120,21 +163,14 @@ evil_images = {
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 evil_group = pygame.sprite.Group()
-nps_group = pygame.sprite.Group()
+npc_group = pygame.sprite.Group()
 
 
+# класс игрового поля
 class Tile(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y):
         super().__init__(tiles_group, all_sprites)
         self.image = tile_images[tile_type]
-        self.rect = self.image.get_rect().move(
-            tile_width * pos_x, tile_height * pos_y)
-
-
-class Evil(pygame.sprite.Sprite):
-    def __init__(self, evil_type, pos_x, pos_y):
-        super().__init__(evil_group, all_sprites)
-        self.image = evil_images[evil_type]
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
 
@@ -168,7 +204,7 @@ class Beggar(pygame.sprite.Sprite):
         self.speed_counter = 0
 
     def update(self):
-        if self.speed_counter == 2:
+        if self.speed_counter == 1:
             self.speed_counter = 0
             self.rect.x -= 1
         else:
@@ -193,20 +229,11 @@ class Drunk(pygame.sprite.Sprite):
             self.speed_counter += 1
 
 
-class Nps(pygame.sprite.Sprite):
-    def __init__(self, nps_type, pos_x, pos_y):
-        super().__init__(evil_group, all_sprites)
-        self.image = nps_images[nps_type]
-        self.rect = self.image.get_rect().move(
-            tile_width * pos_x, tile_height * pos_y)
-        self.health = 5
-        self.speed_counter = 0
-
-
+# класс полицейского
 class Cop(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
-        super().__init__(nps_group, all_sprites)
-        self.image = nps_images['cop']
+        super().__init__(npc_group, all_sprites)
+        self.image = npc_images['cop']
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
         self.x = pos_x
@@ -222,21 +249,23 @@ class Cop(pygame.sprite.Sprite):
             self.speed_counter += 1
 
 
+# класс пули
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
-        super().__init__(nps_group, all_sprites)
-        self.image = nps_images['bullet']
+        super().__init__(npc_group, all_sprites)
+        self.image = npc_images['bullet']
         self.rect = self.image.get_rect().move(
             tile_width * pos_x + 28, tile_height * pos_y)
 
     def update(self):
-        self.rect.x += 1
+        self.rect.x += 5
 
 
+# класс соточки
 class Sotochka(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
-        super().__init__(nps_group, all_sprites)
-        self.image = nps_images['sotochka']
+        super().__init__(npc_group, all_sprites)
+        self.image = npc_images['sotochka']
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
         self.x = pos_x
@@ -244,41 +273,20 @@ class Sotochka(pygame.sprite.Sprite):
         self.health = 5
 
 
+# класс ремонта дорог
 class Sign(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
-        super().__init__(nps_group, all_sprites)
-        self.image = nps_images['sign']
+        super().__init__(npc_group, all_sprites)
+        self.image = npc_images['sign']
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
         self.x = pos_x
         self.y = pos_y
         self.health = 5
-
-
-# class AnimatedSprite(pygame.sprite.Sprite):
-#     def __init__(self, sheet, columns, rows, pos_x, pos_y):
-#         super().__init__(all_sprites)
-#         self.frames = []
-#         self.cut_sheet(sheet, columns, rows)
-#         self.cur_frame = 0
-#         self.image = self.frames[self.cur_frame]
-#         self.rect = self.rect.move(tile_width * pos_x, tile_height * pos_y)
-#
-#     def cut_sheet(self, sheet, columns, rows):
-#         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
-#                                 sheet.get_height() // rows)
-#         for j in range(rows):
-#             for i in range(columns):
-#                 frame_location = (self.rect.w * i, self.rect.h * j)
-#                 self.frames.append(sheet.subsurface(pygame.Rect(
-#                     frame_location, self.rect.size)))
-#
-#     def update(self):
-#         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
-#         self.image = self.frames[self.cur_frame]
 
 
 def generate_level():
+    print('[#] генерация уровня')
     for y in range(5):
         for x in range(9):
             if level == 1:
@@ -296,25 +304,23 @@ Gop(9, 3)
 Beggar(11, 2)
 Beggar(11, 6)
 
-
-# AnimatedSprite(load_image("portal.png"), 1, 32, 5, 5)
-
 clock = pygame.time.Clock()
 running = True
-start_screen()
+start_screen()  # открытие стартового окна
 
-level_x, level_y = generate_level()
+level_x, level_y = generate_level()  # генерация уровня
 
-cache = 'cop'
+cache = 'cop'  # выбранный NPC
 image_panel = ['data/cop_blur.png', 'data/sotochka.png', 'data/sign.png']
-board = [[0] * 9 for x in range(5)]
+board = [[0] * 9 for x in range(5)]  # NPC на поле
 font = pygame.font.Font(None, 20)
 text_300 = font.render("300", True, [0, 0, 0])
-text_200 = font.render("200", True, [0, 0, 0])
+text_100 = font.render("100", True, [0, 0, 0])
 MONEY = 500
 text_of_money = font.render("ВАЛЮТА:", True, [0, 0, 0])
 POINTS = 0
 text_of_points = font.render("ОЧКИ:", True, [0, 0, 0])
+print('[!] начало игры')
 while running:
     # отрисовка игровой панели
     screen.fill((128, 128, 128))
@@ -322,30 +328,34 @@ while running:
     screen.blit(pygame.image.load(image_panel[1]), (tile_width * 4, 10))
     screen.blit(pygame.image.load(image_panel[2]), (tile_width * 5, 10))
     screen.blit(text_300, (tile_width * 3 + 13, tile_height * 1 + 20))
-    screen.blit(text_200, (tile_width * 4 + 13, tile_height * 1 + 20))
+    screen.blit(text_100, (tile_width * 4 + 13, tile_height * 1 + 20))
     screen.blit(text_300, (tile_width * 5 + 13, tile_height * 1 + 20))
     screen.blit(text_of_money, (tile_width * 1 - 5, tile_height * 0 + 35))
     text_money = font.render(str(MONEY), True, [0, 0, 0])
     screen.blit(text_money, (tile_width * 1 + 10, tile_height * 1 + 20))
     screen.blit(text_of_points, (tile_width * 7 + 3, tile_height * 0 + 35))
-    text_points = font.render(str(POINTS), True, [0, 0, 0])
-    screen.blit(text_points, (tile_width * 7 + 13, tile_height * 1 + 20))
+    text_points = font.render(str(POINTS // 10), True, [0, 0, 0])
+    screen.blit(text_points, (tile_width * 7 + 5, tile_height * 1 + 20))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+            terminate()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_1:
+                print('[#] выбор `cop`')
                 cache = 'cop'  # 1
                 image_panel[0] = 'data/cop_blur.png'
                 image_panel[1] = 'data/sotochka.png'
                 image_panel[2] = 'data/sign.png'
             if event.key == pygame.K_2:
+                print('[#] выбор `sotochka`')
                 cache = 'sotochka'  # 2
                 image_panel[0] = 'data/cop.png'
                 image_panel[1] = 'data/sotochka_blur.png'
                 image_panel[2] = 'data/sign.png'
             if event.key == pygame.K_3:
+                print('[#] выбор `sign`')
                 cache = 'sign'  # 3
                 image_panel[0] = 'data/cop.png'
                 image_panel[1] = 'data/sotochka.png'
@@ -356,14 +366,17 @@ while running:
                     x, y = get_cell(event.pos)
                     if board[y][x] == 0:
                         if cache == 'cop' and MONEY >= 300:
+                            print(f'[#] `cop` установлен на ({x}, {y})')
                             board[y][x] = 1
                             MONEY -= 300
                             Cop(x, y + 2)
-                        elif cache == 'sotochka'  and MONEY >= 200:
+                        elif cache == 'sotochka' and MONEY >= 100:
+                            print(f'[#] `sotochka` установлен на ({x}, {y})')
                             board[y][x] = 2
-                            MONEY -= 200
+                            MONEY -= 100
                             Sotochka(x, y + 2)
                         elif cache == 'sign' and MONEY >= 300:
+                            print(f'[#] `sign` установлен на ({x}, {y})')
                             board[y][x] = 3
                             MONEY -= 300
                             Sign(x, y + 2)
@@ -373,7 +386,7 @@ while running:
 
     all_sprites.update()
     tiles_group.draw(screen)
-    nps_group.draw(screen)
+    npc_group.draw(screen)
     evil_group.draw(screen)
 
     pygame.display.flip()
