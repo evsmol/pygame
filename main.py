@@ -10,7 +10,7 @@ pygame.display.set_caption('УРАЛМАШ')
 pygame.display.set_icon(pygame.image.load("data/icon.png"))
 size = width, height = 450, 350  # размеры поля
 screen = pygame.display.set_mode(size)
-FPS = 20
+FPS = 60
 tile_width = tile_height = 50  # размеры клетки
 level = 0  # выбранный уровень
 music = True  # состояние музыки
@@ -164,6 +164,7 @@ all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 evil_group = pygame.sprite.Group()
 npc_group = pygame.sprite.Group()
+bullet_group = pygame.sprite.Group()
 
 
 # класс игрового поля
@@ -252,7 +253,7 @@ class Cop(pygame.sprite.Sprite):
 # класс пули
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
-        super().__init__(npc_group, all_sprites)
+        super().__init__(bullet_group, all_sprites)
         self.image = npc_images['bullet']
         self.rect = self.image.get_rect().move(
             tile_width * pos_x + 28, tile_height * pos_y)
@@ -380,6 +381,8 @@ while running:
                             board[y][x] = 3
                             MONEY -= 300
                             Sign(x, y + 2)
+        pygame.sprite.groupcollide(bullet_group, evil_group, True, True)
+        pygame.sprite.groupcollide(npc_group, evil_group, True, True)
 
     MONEY += 2
     POINTS += 1
@@ -387,6 +390,7 @@ while running:
     all_sprites.update()
     tiles_group.draw(screen)
     npc_group.draw(screen)
+    bullet_group.draw(screen)
     evil_group.draw(screen)
 
     pygame.display.flip()
