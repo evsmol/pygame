@@ -2,12 +2,13 @@
 
 import pygame
 
-from config import LEVEL, MONEY, POINTS
+from config import LEVEL, MONEY, POINTS, BOARD
 from config import screen, width, height, clock, fps, tile_width, tile_height
 from config import all_sprites, tiles_group, evil_group, npc_group, \
     bullet_group
 from helpers import load_image, terminate, get_cell
 from classes import Tile, Cop, Bullet, Sotochka, Sign, Gop, Drunk, Beggar
+from levels import levels
 
 
 # стартовое окно
@@ -104,10 +105,36 @@ def game_screen():
             elif LEVEL[0] == 3:
                 Tile('level3', x, y + 2)
 
+    # генерация врагов
+    print('[#] генерация врагов')
+    for y in range(5):
+        for x in range(23):
+            if LEVEL[0] == 1:
+                if levels['level1'][y][x] == 1:
+                    Gop(x + 9, y + 2)
+                elif levels['level1'][y][x] == 2:
+                    Beggar(x + 9, y + 2)
+                elif levels['level1'][y][x] == 3:
+                    Drunk(x + 9, y + 2)
+            elif LEVEL[0] == 2:
+                if levels['level2'][y][x] == 1:
+                    Gop(x + 9, y + 2)
+                elif levels['level2'][y][x] == 2:
+                    Beggar(x + 9, y + 2)
+                elif levels['level2'][y][x] == 3:
+                    Drunk(x + 9, y + 2)
+            elif LEVEL[0] == 3:
+                if levels['level3'][y][x] == 1:
+                    Gop(x + 9, y + 2)
+                elif levels['level3'][y][x] == 2:
+                    Beggar(x + 9, y + 2)
+                elif levels['level3'][y][x] == 3:
+                    Drunk(x + 9, y + 2)
+
     running = True
     cache = 'cop'  # выбранный NPC
     image_panel = ['data/cop_blur.png', 'data/sotochka.png', 'data/sign.png']
-    board = [[0] * 9 for x in range(5)]  # NPC на поле
+    BOARD[:] = [[0] * 9 for x in range(5)]  # NPC на поле
     font = pygame.font.Font(None, 20)
     text_300 = font.render("300", True, [0, 0, 0])
     text_100 = font.render("100", True, [0, 0, 0])
@@ -159,21 +186,21 @@ def game_screen():
                 if event.button == 1:
                     if get_cell(event.pos):
                         x, y = get_cell(event.pos)
-                        if board[y][x] == 0:
+                        if BOARD[y][x] == 0:
                             if cache == 'cop' and MONEY[0] >= 300:
                                 print(f'[#] `cop` установлен на ({x}, {y})')
-                                board[y][x] = 1
+                                BOARD[y][x] = 1
                                 MONEY[0] -= 300
                                 Cop(x, y + 2)
                             elif cache == 'sotochka' and MONEY[0] >= 100:
                                 print(
                                     f'[#] `sotochka` установлен на ({x}, {y})')
-                                board[y][x] = 2
+                                BOARD[y][x] = 2
                                 MONEY[0] -= 100
                                 Sotochka(x, y + 2)
                             elif cache == 'sign' and MONEY[0] >= 300:
                                 print(f'[#] `sign` установлен на ({x}, {y})')
-                                board[y][x] = 3
+                                BOARD[y][x] = 3
                                 MONEY[0] -= 300
                                 Sign(x, y + 2)
 
@@ -183,6 +210,7 @@ def game_screen():
         npc_collide = pygame.sprite.groupcollide(npc_group, evil_group,
                                                  False, False)
 
+        # обработка столкновений
         for key, value in bullet_collide.items():
             key.kill()
             value[0].damage('bullet')
