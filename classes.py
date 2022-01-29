@@ -4,7 +4,7 @@ import pygame
 from random import random
 
 from config import all_sprites, tiles_group, evil_group, npc_group, \
-    bullet_group
+    bullet_group, lose_group, stop_bullet_group
 from images import tile_images, npc_images, evil_images
 from config import tile_width, tile_height, POINTS, MONEY, BOARD
 
@@ -183,7 +183,6 @@ class Sotochka(pygame.sprite.Sprite):
 
     def damage(self):
         self.kill()
-        print(self.x,  self.y)
         BOARD[self.y - 2][self.x] = 0
         print('[#] соточку забрали')
 
@@ -212,3 +211,27 @@ class Sign(pygame.sprite.Sprite):
 
     def get_name(self):
         return 'sign'
+
+
+# класс линии проигрыша
+class Lose(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(lose_group, all_sprites)
+        self.image = tile_images['level3']
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect().move(
+            tile_width * pos_x, tile_height * pos_y)
+        self.x = pos_x
+        self.y = pos_y
+
+
+# класс недолёта пуль
+class StopBullet(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(stop_bullet_group, all_sprites)
+        self.image = tile_images['level3']
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect().move(
+            tile_width * pos_x, tile_height * pos_y)
+        self.x = pos_x
+        self.y = pos_y

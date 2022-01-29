@@ -5,9 +5,10 @@ import pygame
 from config import LEVEL, MONEY, POINTS, BOARD
 from config import screen, width, height, clock, fps, tile_width, tile_height
 from config import all_sprites, tiles_group, evil_group, npc_group, \
-    bullet_group
+    bullet_group, lose_group, stop_bullet_group
 from helpers import load_image, terminate, get_cell
-from classes import Tile, Cop, Bullet, Sotochka, Sign, Gop, Drunk, Beggar
+from classes import Tile, Cop, Sotochka, Sign, Gop, Drunk, Beggar, Lose, \
+    StopBullet
 from levels import levels
 
 
@@ -131,6 +132,12 @@ def game_screen():
                 elif levels['level3'][y][x] == 3:
                     Drunk(x + 9, y + 2)
 
+    print('[#] генерация ограничительных линий')
+    for y in range(5):
+        for x in range(9):
+            Lose(-1, y + 2)  # линия проигрыша
+            StopBullet(10, y + 2)  # стоп пулям в конце поля
+
     running = True
     cache = 'cop'  # выбранный NPC
     image_panel = ['data/cop_blur.png', 'data/sotochka.png', 'data/sign.png']
@@ -209,6 +216,11 @@ def game_screen():
                                                     False, False)
         npc_collide = pygame.sprite.groupcollide(npc_group, evil_group,
                                                  False, False)
+        lose_collide = pygame.sprite.groupcollide(lose_group, evil_group,
+                                                  False, False)
+        stop_bullet_collide = pygame.sprite.groupcollide(bullet_group,
+                                                         stop_bullet_group,
+                                                         False, False)
 
         # обработка столкновений
         for key, value in bullet_collide.items():
@@ -223,6 +235,12 @@ def game_screen():
                 value[0].damage('sotochka')
             elif key.get_name() == 'sign':
                 value[0].damage('sign')
+
+        for key in stop_bullet_collide.keys():
+            key.kill()
+
+        if lose_collide:
+            running = False
 
         POINTS[0] += 1
 
