@@ -10,16 +10,16 @@ pygame.display.set_caption('УРАЛМАШ')
 pygame.display.set_icon(pygame.image.load("data/icon.png"))
 size = width, height = 450, 350  # размеры поля
 screen = pygame.display.set_mode(size)
-FPS = 60
+FPS = 40
 tile_width = tile_height = 50  # размеры клетки
 level = 0  # выбранный уровень
 music = True  # состояние музыки
 
 # музыка
 # sound_start = pg.mixer.Sound('data/start.mp3')
-# sound_start.set_volume(0.5)
+# sound_start.set_volume(0.2)
 # sound_main = pg.mixer.Sound('data/main.mp3')
-# sound_main.set_volume(0.5)
+# sound_main.set_volume(0.2)
 
 
 # выход из программы
@@ -181,10 +181,16 @@ class Gop(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(evil_group, all_sprites)
         self.image = evil_images['gop']
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
         self.health = 5
         self.speed_counter = 0
+
+    def damage(self):
+        self.health -= 1
+        if self.health == 0:
+            self.kill()
 
     def update(self):
         if self.speed_counter == 3:
@@ -199,6 +205,7 @@ class Beggar(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(evil_group, all_sprites)
         self.image = evil_images['beggar']
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
         self.health = 5
@@ -217,6 +224,7 @@ class Drunk(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(evil_group, all_sprites)
         self.image = evil_images['drunk']
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
         self.health = 5
@@ -235,6 +243,7 @@ class Cop(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(npc_group, all_sprites)
         self.image = npc_images['cop']
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
         self.x = pos_x
@@ -255,6 +264,7 @@ class Bullet(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(bullet_group, all_sprites)
         self.image = npc_images['bullet']
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x + 28, tile_height * pos_y)
 
@@ -267,6 +277,7 @@ class Sotochka(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(npc_group, all_sprites)
         self.image = npc_images['sotochka']
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
         self.x = pos_x
@@ -279,6 +290,7 @@ class Sign(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(npc_group, all_sprites)
         self.image = npc_images['sign']
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
         self.x = pos_x
@@ -300,6 +312,17 @@ def generate_level():
 
 
 Gop(9, 5)
+Gop(10, 5)
+Gop(11, 5)
+Gop(12, 5)
+Gop(13, 5)
+Gop(14, 5)
+Gop(15, 5)
+Gop(16, 5)
+Gop(17, 5)
+Gop(18, 5)
+Gop(19, 5)
+Gop(20, 5)
 Drunk(10, 4)
 Gop(9, 3)
 Beggar(11, 2)
@@ -381,8 +404,15 @@ while running:
                             board[y][x] = 3
                             MONEY -= 300
                             Sign(x, y + 2)
-        pygame.sprite.groupcollide(bullet_group, evil_group, True, True)
-        pygame.sprite.groupcollide(npc_group, evil_group, True, True)
+
+    # столкновения
+    bullet_collide = pygame.sprite.groupcollide(bullet_group, evil_group,
+                                                False, False)
+    npc_collide = pygame.sprite.groupcollide(npc_group, evil_group,
+                                             True, True)
+
+    for key, value in bullet_collide.items():
+        key.kill()
 
     MONEY += 2
     POINTS += 1
