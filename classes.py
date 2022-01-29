@@ -4,8 +4,8 @@ import pygame
 from random import random
 
 from config import all_sprites, tiles_group, evil_group, npc_group, \
-    bullet_group, lose_group, stop_bullet_group
-from images import tile_images, npc_images, evil_images
+    bullet_group, lose_group, stop_bullet_group, gameover_group
+from images import tile_images, npc_images, evil_images, fon_images
 from config import tile_width, tile_height, POINTS, MONEY, BOARD
 
 
@@ -235,3 +235,17 @@ class StopBullet(pygame.sprite.Sprite):
             tile_width * pos_x, tile_height * pos_y)
         self.x = pos_x
         self.y = pos_y
+
+
+# тут и так всё понятно
+class Gameover(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__(gameover_group, all_sprites)
+        self.image = fon_images['fon_loss']
+        self.rect = self.image.get_rect()
+        self.rect.x = -450
+        self.rect.y = 0
+
+    def update(self):
+        if self.rect.x + 450 != 450:
+            self.rect.x += 1
