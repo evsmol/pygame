@@ -1,6 +1,8 @@
 import os
 import sys
 
+from random import random as rd
+
 import pygame
 
 
@@ -10,15 +12,15 @@ pygame.display.set_caption('УРАЛМАШ')
 pygame.display.set_icon(pygame.image.load("data/icon.png"))
 size = width, height = 450, 350  # размеры поля
 screen = pygame.display.set_mode(size)
-FPS = 40
+FPS = 50
 tile_width = tile_height = 50  # размеры клетки
 level = 0  # выбранный уровень
 music = True  # состояние музыки
 
 # музыка
-# sound_start = pg.mixer.Sound('data/start.mp3')
+# sound_start = pygame.mixer.Sound('data/start.mp3')
 # sound_start.set_volume(0.2)
-# sound_main = pg.mixer.Sound('data/main.mp3')
+# sound_main = pygame.mixer.Sound('data/main.mp3')
 # sound_main.set_volume(0.2)
 
 
@@ -187,10 +189,23 @@ class Gop(pygame.sprite.Sprite):
         self.health = 5
         self.speed_counter = 0
 
-    def damage(self):
-        self.health -= 1
-        if self.health == 0:
+    def damage(self, type_sprite):
+        global POINTS, MONEY
+        if type_sprite == 'bullet':
+            self.health -= 1
+        elif type_sprite == 'cop':
+            self.health -= 2
+            self.rect.x += tile_width * (1 - rd())
+        elif type_sprite == 'sotochka':
+            self.rect.x += tile_width * (2 - rd())
+        elif type_sprite == 'sign':
+            self.health -= 1
+            self.rect.x += tile_width * (3 - rd())
+        if self.health <= 0:
             self.kill()
+            POINTS += 1000
+            MONEY += 200
+            print('[#] гопник убит')
 
     def update(self):
         if self.speed_counter == 3:
@@ -208,8 +223,26 @@ class Beggar(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
-        self.health = 5
+        self.health = 3
         self.speed_counter = 0
+
+    def damage(self, type_sprite):
+        global POINTS, MONEY
+        if type_sprite == 'bullet':
+            self.health -= 1
+        elif type_sprite == 'cop':
+            self.health -= 2
+            self.rect.x += tile_width * (1 - rd())
+        elif type_sprite == 'sotochka':
+            self.rect.x += tile_width * (2 - rd())
+        elif type_sprite == 'sign':
+            self.health -= 1
+            self.rect.x += tile_width * (3 - rd())
+        if self.health <= 0:
+            self.kill()
+            POINTS += 1000
+            MONEY += 100
+            print('[#] попрошайка убит')
 
     def update(self):
         if self.speed_counter == 1:
@@ -227,8 +260,26 @@ class Drunk(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
-        self.health = 5
+        self.health = 10
         self.speed_counter = 0
+
+    def damage(self, type_sprite):
+        global POINTS, MONEY
+        if type_sprite == 'bullet':
+            self.health -= 1
+        elif type_sprite == 'cop':
+            self.health -= 2
+            self.rect.x += tile_width * (1 - rd())
+        elif type_sprite == 'sotochka':
+            self.rect.x += tile_width * (3 - rd())
+        elif type_sprite == 'sign':
+            self.health -= 1
+            self.rect.x += tile_width * (2 - rd())
+        if self.health <= 0:
+            self.kill()
+            POINTS += 1000
+            MONEY += 300
+            print('[#] пьяница убит')
 
     def update(self):
         if self.speed_counter == 4:
@@ -248,8 +299,18 @@ class Cop(pygame.sprite.Sprite):
             tile_width * pos_x, tile_height * pos_y)
         self.x = pos_x
         self.y = pos_y
-        self.health = 5
+        self.health = 3
         self.speed_counter = 100
+
+    def damage(self):
+        self.health -= 1
+        if self.health == 0:
+            self.kill()
+            board[self.y - 2][self.x] = 0
+            print('[#] полицейский убит')
+
+    def get_name(self):
+        return 'cop'
 
     def update(self):
         if self.speed_counter == 150:
@@ -282,7 +343,15 @@ class Sotochka(pygame.sprite.Sprite):
             tile_width * pos_x, tile_height * pos_y)
         self.x = pos_x
         self.y = pos_y
-        self.health = 5
+
+    def damage(self):
+        self.kill()
+        print(self.x,  self.y)
+        board[self.y - 2][self.x] = 0
+        print('[#] соточку забрали')
+
+    def get_name(self):
+        return 'sotochka'
 
 
 # класс ремонта дорог
@@ -295,7 +364,17 @@ class Sign(pygame.sprite.Sprite):
             tile_width * pos_x, tile_height * pos_y)
         self.x = pos_x
         self.y = pos_y
-        self.health = 5
+        self.health = 7
+
+    def damage(self):
+        self.health -= 1
+        if self.health == 0:
+            self.kill()
+            board[self.y - 2][self.x] = 0
+            print('[#] дорогу починили')
+
+    def get_name(self):
+        return 'sign'
 
 
 def generate_level():
@@ -340,7 +419,7 @@ board = [[0] * 9 for x in range(5)]  # NPC на поле
 font = pygame.font.Font(None, 20)
 text_300 = font.render("300", True, [0, 0, 0])
 text_100 = font.render("100", True, [0, 0, 0])
-MONEY = 500
+MONEY = 3000
 text_of_money = font.render("ВАЛЮТА:", True, [0, 0, 0])
 POINTS = 0
 text_of_points = font.render("ОЧКИ:", True, [0, 0, 0])
@@ -409,12 +488,21 @@ while running:
     bullet_collide = pygame.sprite.groupcollide(bullet_group, evil_group,
                                                 False, False)
     npc_collide = pygame.sprite.groupcollide(npc_group, evil_group,
-                                             True, True)
+                                             False, False)
 
     for key, value in bullet_collide.items():
         key.kill()
+        value[0].damage('bullet')
 
-    MONEY += 2
+    for key, value in npc_collide.items():
+        key.damage()
+        if key.get_name() == 'cop':
+            value[0].damage('cop')
+        elif key.get_name() == 'sotochka':
+            value[0].damage('sotochka')
+        elif key.get_name() == 'sign':
+            value[0].damage('sign')
+
     POINTS += 1
 
     all_sprites.update()
