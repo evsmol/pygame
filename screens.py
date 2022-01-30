@@ -340,8 +340,6 @@ def game_screen():
             end_screen()
             return  # остановка
 
-        POINTS[0] += 1
-
         all_sprites.update()
         tiles_group.draw(screen)
         npc_group.draw(screen)

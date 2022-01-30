@@ -38,11 +38,10 @@ class Gop(pygame.sprite.Sprite):
         elif type_sprite == 'sotochka':
             self.rect.x += tile_width * (2 - random())
         elif type_sprite == 'sign':
-            self.health -= 1
             self.rect.x += tile_width * (3 - random())
         if self.health <= 0:
             self.kill()
-            POINTS[0] += 1000
+            POINTS[0] += 2000
             MONEY[0] += 200
             print('[#] гопник убит')
 
@@ -74,7 +73,6 @@ class Beggar(pygame.sprite.Sprite):
         elif type_sprite == 'sotochka':
             self.rect.x += tile_width * (2 - random())
         elif type_sprite == 'sign':
-            self.health -= 1
             self.rect.x += tile_width * (3 - random())
         if self.health <= 0:
             self.kill()
@@ -110,11 +108,10 @@ class Drunk(pygame.sprite.Sprite):
         elif type_sprite == 'sotochka':
             self.rect.x += tile_width * (3 - random())
         elif type_sprite == 'sign':
-            self.health -= 1
             self.rect.x += tile_width * (2 - random())
         if self.health <= 0:
             self.kill()
-            POINTS[0] += 1000
+            POINTS[0] += 3000
             MONEY[0] += 300
             print('[#] пьяница убит')
 
