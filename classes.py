@@ -235,17 +235,3 @@ class StopBullet(pygame.sprite.Sprite):
             tile_width * pos_x, tile_height * pos_y)
         self.x = pos_x
         self.y = pos_y
-
-
-# тут и так всё понятно
-class Gameover(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__(gameover_group, all_sprites)
-        self.image = fon_images['fon_loss']
-        self.rect = self.image.get_rect()
-        self.rect.x = -450
-        self.rect.y = 0
-
-    def update(self):
-        if self.rect.x + 450 != 450:
-            self.rect.x += 1

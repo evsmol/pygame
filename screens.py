@@ -8,7 +8,7 @@ from config import all_sprites, tiles_group, evil_group, npc_group, \
     bullet_group, lose_group, stop_bullet_group, gameover_group
 from helpers import load_image, terminate, get_cell
 from classes import Tile, Cop, Sotochka, Sign, Gop, Drunk, Beggar, Lose, \
-    StopBullet, Gameover
+    StopBullet
 from levels import levels
 from images import fon_images
 
@@ -89,6 +89,37 @@ def guide_screen():
                 terminate()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    start_screen()
+        pygame.display.flip()
+        clock.tick(fps)
+
+
+# окно окончания игры
+def end_screen():
+    print("[!] открытие окна окончания игры")
+    intro_text = ["ВЫ ПРОИГРАЛИ", "",
+                  "Посмотреть результаты — «ЛКМ»",
+                  "Перейти в меню — «ПРОБЕЛ»"]
+
+    fon = pygame.transform.scale(fon_images['fon_end'], (width, height))
+    screen.blit(fon, (0, 0))
+    start_font = pygame.font.Font(None, 30)
+    text_coord = 50
+    for line in intro_text:
+        string_rendered = start_font.render(line, 1, pygame.Color('white'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
                     start_screen()
         pygame.display.flip()
         clock.tick(fps)
@@ -241,7 +272,12 @@ def game_screen():
             key.kill()
 
         if lose_collide:
-            Gameover()
+            running = False
+            for sprite in all_sprites:
+                sprite.kill()
+            LEVEL[0] = 0
+            print("[!] конец игры")
+            end_screen()
 
         POINTS[0] += 1
 
