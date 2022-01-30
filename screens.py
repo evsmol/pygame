@@ -1,13 +1,12 @@
 # функции загрузки окон
 
 import pygame
-import sqlite3
 
 from config import LEVEL, MONEY, POINTS, BOARD
 from config import screen, width, height, clock, fps, tile_width, tile_height
 from config import all_sprites, tiles_group, evil_group, npc_group, \
     bullet_group, lose_group, stop_bullet_group, gameover_group
-from helpers import load_image, terminate, get_cell
+from helpers import load_image, terminate, get_cell, save_result
 from classes import Tile, Cop, Sotochka, Sign, Gop, Drunk, Beggar, Lose, \
     StopBullet
 from levels import levels
@@ -277,16 +276,8 @@ def game_screen():
             for sprite in all_sprites:
                 sprite.kill()
 
-            print("[#] сохранение результатов")
-            con = sqlite3.connect("records_db.db")
-            cur = con.cursor()
-            cur.execute(f"UPDATE records "
-                        f"SET last = False "
-                        f"WHERE last = True").fetchall()
-            cur.execute(f"INSERT INTO records(level,result,last) "
-                        f"VALUES({LEVEL[0]},{POINTS[0] // 10},"
-                        f"True)").fetchall()
-            con.commit()
+            # сохранение результата
+            save_result()
 
             LEVEL[0] = 0
             print("[!] конец игры")

@@ -2,9 +2,12 @@
 
 from helpers import load_image
 
+
 fon_images = {
     'fon_start': load_image('fon_start.jpg'),
-    'fon_end': load_image('fon_end.jpg')
+    'fon_end': load_image('fon_end.jpg'),
+    'fon_results': load_image('fon_results.jpg'),
+    'fon_manual': load_image('fon_manual.jpg')
 }
 tile_images = {
     'level1': load_image('stonecutter.png'),

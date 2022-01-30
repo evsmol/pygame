@@ -3,13 +3,16 @@
 import pygame
 import sys
 import os
+import sqlite3
 
 from config import tile_width, tile_height
+from config import POINTS, LEVEL
 
 
 # выход из программы
 def terminate():
     print("[!] выход из программы")
+    save_result()
     pygame.quit()
     sys.exit()
 
@@ -40,3 +43,17 @@ def get_cell(mouse_pos):
             return (mouse_pos[0] - 0) // tile_width, \
                    (mouse_pos[1] - tile_height * 2) // tile_height
     return None
+
+
+# сохранение результата
+def save_result():
+    print("[#] сохранение результатов")
+    con = sqlite3.connect("records_db.db")
+    cur = con.cursor()
+    cur.execute(f"UPDATE records "
+                f"SET last = False "
+                f"WHERE last = True").fetchall()
+    cur.execute(f"INSERT INTO records(level,result,last) "
+                f"VALUES({LEVEL[0]},{POINTS[0] // 10},"
+                f"True)").fetchall()
+    con.commit()
