@@ -123,6 +123,22 @@ class Drunk(pygame.sprite.Sprite):
             self.speed_counter += 1
 
 
+# класс министра
+class Minister(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(evil_group, all_sprites)
+        self.image = evil_images['minister']
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect().move(
+            tile_width * pos_x, tile_height * pos_y)
+
+    def damage(self, type_sprite):
+        pass
+
+    def update(self):
+        self.rect.x -= 1
+
+
 # класс полицейского
 class Cop(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):

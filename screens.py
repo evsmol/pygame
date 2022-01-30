@@ -8,7 +8,7 @@ from config import all_sprites, tiles_group, evil_group, npc_group, \
     bullet_group, lose_group, stop_bullet_group, gameover_group
 from helpers import terminate, get_cell, save_result, get_results
 from classes import Tile, Cop, Sotochka, Sign, Gop, Drunk, Beggar, Lose, \
-    StopBullet
+    StopBullet, Minister
 from levels import levels
 from images import fon_images
 
@@ -141,7 +141,7 @@ def results_screen():
                   f"2 уровень — {res2}",
                   f"3 уровень — {res3}",
                   f"Последняя игра — {res_last[1]}",
-                  f"\t{res_last[0]} уровень, {res_last[2]} место", "",
+                  f"    *{res_last[0]} уровень, {res_last[2]} место", "",
                   f"Вернуться в меню — «ESC»"]
 
     fon = pygame.transform.scale(fon_images['fon_results'], (width, height))
@@ -214,6 +214,7 @@ def game_screen():
             StopBullet(10, y + 2)  # стоп пулям в конце поля
 
     running = True
+    apocalypse = False  # вызов министра
     cache = 'cop'  # выбранный NPC
     image_panel = ['data/cop_blur.png', 'data/sotochka.png', 'data/sign.png']
     BOARD[:] = [[0] * 9 for x in range(5)]  # NPC на поле
@@ -299,6 +300,11 @@ def game_screen():
                                 MONEY[0] -= 300
                                 Sign(x, y + 2)
 
+        # вызов министра
+        if not evil_group:
+            minister = Minister(9, 4)
+            apocalypse = True
+
         # столкновения
         bullet_collide = pygame.sprite.groupcollide(bullet_group, evil_group,
                                                     False, False)
@@ -309,6 +315,9 @@ def game_screen():
         stop_bullet_collide = pygame.sprite.groupcollide(bullet_group,
                                                          stop_bullet_group,
                                                          False, False)
+        if apocalypse:
+            minister_collide = pygame.sprite.spritecollide(minister,
+                                                           npc_group, True)
 
         # обработка столкновений
         for key, value in bullet_collide.items():

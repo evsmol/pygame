@@ -23,5 +23,6 @@ npc_images = {
 evil_images = {
     'gop': load_image('gop.png'),
     'beggar': load_image('beggar.png'),
-    'drunk': load_image('drunk.png')
+    'drunk': load_image('drunk.png'),
+    'minister': load_image('minister.png')
 }
