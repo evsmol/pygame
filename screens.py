@@ -6,7 +6,7 @@ from config import LEVEL, MONEY, POINTS, BOARD
 from config import screen, width, height, clock, fps, tile_width, tile_height
 from config import all_sprites, tiles_group, evil_group, npc_group, \
     bullet_group, lose_group, stop_bullet_group, gameover_group
-from helpers import load_image, terminate, get_cell, save_result
+from helpers import terminate, get_cell, save_result, get_results
 from classes import Tile, Cop, Sotochka, Sign, Gop, Drunk, Beggar, Lose, \
     StopBullet
 from levels import levels
@@ -53,6 +53,8 @@ def start_screen():
                     print('[!] выбран 3 уровень')
                 elif event.key == pygame.K_F1:
                     guide_screen()
+                elif event.key == pygame.K_F2:
+                    results_screen()
             if LEVEL[0]:
                 # sound_start.stop()
                 # sound_main.play()
@@ -68,9 +70,9 @@ def guide_screen():
                   "Выбор NPC — «1», «2», «3»",
                   "Поставить NPC — «ЛКМ»",
                   "Выкл/вкл музыку — «ПРОБЕЛ»",
-                  "Вернуться назад — «ESC»"]
+                  "Вернуться в меню/завершить игру — «ESC»"]
 
-    fon = pygame.transform.scale(load_image('fon_start.jpg'), (width, height))
+    fon = pygame.transform.scale(fon_images['fon_manual'], (width, height))
     screen.blit(fon, (0, 0))
     start_font = pygame.font.Font(None, 30)
     text_coord = 50
@@ -120,6 +122,47 @@ def end_screen():
                 terminate()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    start_screen()
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    results_screen()
+        pygame.display.flip()
+        clock.tick(fps)
+
+
+# окно отображения результатов
+def results_screen():
+    print("[!] открытие окна отображения результатов")
+
+    res1, res2, res3, res_last = get_results()
+
+    intro_text = ["ИГРОВЫЕ РЕКОРДЫ", "",
+                  f"1 уровень — {res1}",
+                  f"2 уровень — {res2}",
+                  f"3 уровень — {res3}",
+                  f"Последняя игра — {res_last[1]}",
+                  f"\t{res_last[0]} уровень, {res_last[2]} место", "",
+                  f"Вернуться в меню — «ESC»"]
+
+    fon = pygame.transform.scale(fon_images['fon_results'], (width, height))
+    screen.blit(fon, (0, 0))
+    start_font = pygame.font.Font(None, 30)
+    text_coord = 50
+    for line in intro_text:
+        string_rendered = start_font.render(line, 1, pygame.Color('white'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
                     start_screen()
         pygame.display.flip()
         clock.tick(fps)
@@ -221,6 +264,19 @@ def game_screen():
                     image_panel[0] = 'data/cop.png'
                     image_panel[1] = 'data/sotochka.png'
                     image_panel[2] = 'data/sign_blur.png'
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+                    for sprite in all_sprites:
+                        sprite.kill()
+
+                    # сохранение результата
+                    save_result()
+
+                    LEVEL[0] = 0
+                    print("[!] конец игры")
+                    end_screen()
+                    return  # остановка
+
             if event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     if get_cell(event.pos):
