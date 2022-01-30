@@ -46,7 +46,7 @@ def get_cell(mouse_pos):
     return None
 
 
-# сохранение результата
+# сохранение результата игры
 def save_result():
     print("[#] сохранение результатов")
     con = sqlite3.connect("records_db.db")
@@ -60,7 +60,7 @@ def save_result():
     con.close()
 
 
-# получить результаты
+# получить результаты игр
 def get_results():
     print("[#] получение результатов")
     con = sqlite3.connect("records_db.db")

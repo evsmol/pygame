@@ -4,8 +4,8 @@ import pygame
 from random import random
 
 from config import all_sprites, tiles_group, evil_group, npc_group, \
-    bullet_group, lose_group, stop_bullet_group, gameover_group
-from images import tile_images, npc_images, evil_images, fon_images
+    bullet_group, lose_group, stop_bullet_group
+from images import tile_images, npc_images, evil_images
 from config import tile_width, tile_height, POINTS, MONEY, BOARD
 
 

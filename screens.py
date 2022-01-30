@@ -5,7 +5,7 @@ import pygame
 from config import LEVEL, MONEY, POINTS, BOARD
 from config import screen, width, height, clock, fps, tile_width, tile_height
 from config import all_sprites, tiles_group, evil_group, npc_group, \
-    bullet_group, lose_group, stop_bullet_group, gameover_group
+    bullet_group, lose_group, stop_bullet_group
 from helpers import terminate, get_cell, save_result, get_results
 from classes import Tile, Cop, Sotochka, Sign, Gop, Drunk, Beggar, Lose, \
     StopBullet, Minister
@@ -18,11 +18,13 @@ def start_screen():
     print("[!] открытие стартового окна")
     intro_text = ["Добро пожаловать на УРАЛМАШ", "",
                   "Выбрать уровень — «1», «2», «3»",
-                  "Посмотреть управление — «F1»",
-                  "Посмотреть статистику — «F2»", "",
+                  "Управление — «F1»",
+                  "Статистика — «F2»",
+                  "Введение в сюжет — «F3»",
+                  "Персонажи — «F4»", "",
                   "Приятной игры!"]
 
-    fon = pygame.transform.scale(fon_images['fon_start'], (width, height))
+    fon = pygame.transform.scale(fon_images['start'], (width, height))
     screen.blit(fon, (0, 0))
     start_font = pygame.font.Font(None, 30)
     text_coord = 50
@@ -55,6 +57,10 @@ def start_screen():
                     guide_screen()
                 elif event.key == pygame.K_F2:
                     results_screen()
+                elif event.key == pygame.K_F3:
+                    story_screen()
+                elif event.key == pygame.K_F4:
+                    characters_screen()
             if LEVEL[0]:
                 # sound_start.stop()
                 # sound_main.play()
@@ -67,12 +73,12 @@ def start_screen():
 def guide_screen():
     print("[!] открытие окна управления")
     intro_text = ["УПРАВЛЕНИЕ", "",
-                  "Выбор NPC — «1», «2», «3»",
+                  "Выбрать NPC — «1», «2», «3»",
                   "Поставить NPC — «ЛКМ»",
-                  "Выкл/вкл музыку — «ПРОБЕЛ»",
+                  "Вкл/выкл музыку — «ПРОБЕЛ»",
                   "Вернуться в меню/завершить игру — «ESC»"]
 
-    fon = pygame.transform.scale(fon_images['fon_manual'], (width, height))
+    fon = pygame.transform.scale(fon_images['manual'], (width, height))
     screen.blit(fon, (0, 0))
     start_font = pygame.font.Font(None, 30)
     text_coord = 50
@@ -103,7 +109,7 @@ def end_screen():
                   "Посмотреть результаты — «ЛКМ»",
                   "Перейти в меню — «ПРОБЕЛ»"]
 
-    fon = pygame.transform.scale(fon_images['fon_end'], (width, height))
+    fon = pygame.transform.scale(fon_images['end'], (width, height))
     screen.blit(fon, (0, 0))
     start_font = pygame.font.Font(None, 30)
     text_coord = 50
@@ -144,9 +150,69 @@ def results_screen():
                   f"    *{res_last[0]} уровень, {res_last[2]} место", "",
                   f"Вернуться в меню — «ESC»"]
 
-    fon = pygame.transform.scale(fon_images['fon_results'], (width, height))
+    fon = pygame.transform.scale(fon_images['results'], (width, height))
     screen.blit(fon, (0, 0))
     start_font = pygame.font.Font(None, 30)
+    text_coord = 50
+    for line in intro_text:
+        string_rendered = start_font.render(line, 1, pygame.Color('white'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    start_screen()
+        pygame.display.flip()
+        clock.tick(fps)
+
+
+# окно введения в сюжет
+def story_screen():
+    print("[!] открытие окна введение в сюжет")
+    intro_text = ["ВВЕДЕНИЕ В СЮЖЕТ", "",
+                  ""]
+
+    fon = pygame.transform.scale(fon_images['story'], (width, height))
+    screen.blit(fon, (0, 0))
+    start_font = pygame.font.Font(None, 20)
+    text_coord = 50
+    for line in intro_text:
+        string_rendered = start_font.render(line, 1, pygame.Color('white'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    start_screen()
+        pygame.display.flip()
+        clock.tick(fps)
+
+
+# окно описания персонажей
+def characters_screen():
+    print("[!] открытие окна описания персонажей")
+    intro_text = ["ПЕРСОНАЖИ", "",
+                  ""]
+
+    fon = pygame.transform.scale(fon_images['characters'], (width, height))
+    screen.blit(fon, (0, 0))
+    start_font = pygame.font.Font(None, 20)
     text_coord = 50
     for line in intro_text:
         string_rendered = start_font.render(line, 1, pygame.Color('white'))
@@ -354,7 +420,6 @@ def game_screen():
         npc_group.draw(screen)
         bullet_group.draw(screen)
         evil_group.draw(screen)
-        gameover_group.draw(screen)
 
         pygame.display.flip()
         clock.tick(fps)
