@@ -1,6 +1,7 @@
 # функции загрузки окон
 
 import pygame
+import sqlite3
 
 from config import LEVEL, MONEY, POINTS, BOARD
 from config import screen, width, height, clock, fps, tile_width, tile_height
@@ -275,9 +276,22 @@ def game_screen():
             running = False
             for sprite in all_sprites:
                 sprite.kill()
+
+            print("[#] сохранение результатов")
+            con = sqlite3.connect("records_db.db")
+            cur = con.cursor()
+            cur.execute(f"UPDATE records "
+                        f"SET last = False "
+                        f"WHERE last = True").fetchall()
+            cur.execute(f"INSERT INTO records(level,result,last) "
+                        f"VALUES({LEVEL[0]},{POINTS[0] // 10},"
+                        f"True)").fetchall()
+            con.commit()
+
             LEVEL[0] = 0
             print("[!] конец игры")
             end_screen()
+            return  # остановка
 
         POINTS[0] += 1
 
