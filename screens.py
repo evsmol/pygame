@@ -322,13 +322,13 @@ def game_screen():
                 if event.key == pygame.K_2:
                     print('[#] выбор `sotochka`')
                     cache = 'sotochka'  # 2
-                    image_panel[0] = 'data/cop.png'
+                    image_panel[0] = 'data/cop0.png'
                     image_panel[1] = 'data/sotochka_blur.png'
                     image_panel[2] = 'data/sign.png'
                 if event.key == pygame.K_3:
                     print('[#] выбор `sign`')
                     cache = 'sign'  # 3
-                    image_panel[0] = 'data/cop.png'
+                    image_panel[0] = 'data/cop0.png'
                     image_panel[1] = 'data/sotochka.png'
                     image_panel[2] = 'data/sign_blur.png'
                 if event.key == pygame.K_ESCAPE:

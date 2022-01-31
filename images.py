@@ -17,14 +17,37 @@ tile_images = {
     'level3': load_image('netherite.png')
 }
 npc_images = {
-    'cop': load_image('cop.png'),
+    'cop0': load_image('cop0.png'),
+    'cop1': load_image('cop1.png'),
+    'cop2': load_image('cop2.png'),
+    'cop3': load_image('cop3.png'),
+    'cop4': load_image('cop4.png'),
+    'cop5': load_image('cop5.png'),
+    'cop6': load_image('cop6.png'),
+    'cop7': load_image('cop7.png'),
+
     'sotochka': load_image('sotochka.png'),
     'sign': load_image('sign.png'),
     'bullet': load_image('bullet.png')
 }
 evil_images = {
-    'gop': load_image('gop.png'),
-    'beggar': load_image('beggar.png'),
+    'gop0': load_image('gop0.png'),
+    'gop1': load_image('gop1.png'),
+    'gop2': load_image('gop2.png'),
+    'gop3': load_image('gop3.png'),
+    'gop4': load_image('gop4.png'),
+    'gop5': load_image('gop5.png'),
+    'gop6': load_image('gop6.png'),
+    'gop7': load_image('gop7.png'),
+
+    'beggar0': load_image('beggar0.png'),
+    'beggar1': load_image('beggar1.png'),
+    'beggar2': load_image('beggar2.png'),
+    'beggar3': load_image('beggar3.png'),
+    'beggar4': load_image('beggar4.png'),
+    'beggar5': load_image('beggar5.png'),
+    'beggar6': load_image('beggar6.png'),
+    'beggar7': load_image('beggar7.png'),
 
     'drunk0': load_image('drunk0.png'),
     'drunk1': load_image('drunk1.png'),

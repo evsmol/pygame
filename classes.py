@@ -22,12 +22,13 @@ class Tile(pygame.sprite.Sprite):
 class Gop(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(evil_group, all_sprites)
-        self.image = evil_images['gop']
+        self.image = evil_images['gop0']
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
         self.health = 5
         self.speed_counter = 0
+        self.animation_counter = 1
 
     def damage(self, type_sprite):
         if type_sprite == 'bullet':
@@ -52,17 +53,23 @@ class Gop(pygame.sprite.Sprite):
         else:
             self.speed_counter += 1
 
+        self.image = evil_images[f'gop{self.animation_counter // 5}']
+        self.animation_counter += 1
+        if self.animation_counter // 5 == 8:
+            self.animation_counter = 0
+
 
 # класс попрошайки
 class Beggar(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(evil_group, all_sprites)
-        self.image = evil_images['beggar']
+        self.image = evil_images['beggar0']
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
         self.health = 3
         self.speed_counter = 0
+        self.animation_counter = 1
 
     def damage(self, type_sprite):
         if type_sprite == 'bullet':
@@ -86,6 +93,11 @@ class Beggar(pygame.sprite.Sprite):
             self.rect.x -= 1
         else:
             self.speed_counter += 1
+
+        self.image = evil_images[f'beggar{self.animation_counter // 5}']
+        self.animation_counter += 1
+        if self.animation_counter // 5 == 8:
+            self.animation_counter = 0
 
 
 # класс пьяницы
@@ -149,7 +161,7 @@ class Minister(pygame.sprite.Sprite):
 class Cop(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(npc_group, all_sprites)
-        self.image = npc_images['cop']
+        self.image = npc_images['cop5']
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
@@ -169,8 +181,23 @@ class Cop(pygame.sprite.Sprite):
         return 'cop'
 
     def update(self):
+        if self.speed_counter == 141:
+            self.image = npc_images['cop6']
+        elif self.speed_counter == 144:
+            self.image = npc_images['cop7']
+        elif self.speed_counter == 147:
+            self.image = npc_images['cop0']
+        elif self.speed_counter == 2:
+            self.image = npc_images['cop2']
+        elif self.speed_counter == 5:
+            self.image = npc_images['cop3']
+        elif self.speed_counter == 8:
+            self.image = npc_images['cop4']
+        elif self.speed_counter == 11:
+            self.image = npc_images['cop5']
         if self.speed_counter == 150:
             self.speed_counter = 0
+            self.image = npc_images['cop1']
             Bullet(self.x, self.y)
         else:
             self.speed_counter += 1
@@ -183,7 +210,7 @@ class Bullet(pygame.sprite.Sprite):
         self.image = npc_images['bullet']
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
-            tile_width * pos_x + 28, tile_height * pos_y)
+            tile_width * pos_x + 30, tile_height * pos_y)
 
     def update(self):
         self.rect.x += 5
