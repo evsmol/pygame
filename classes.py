@@ -92,12 +92,13 @@ class Beggar(pygame.sprite.Sprite):
 class Drunk(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(evil_group, all_sprites)
-        self.image = evil_images['drunk']
+        self.image = evil_images['drunk0']
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
         self.health = 10
         self.speed_counter = 0
+        self.animation_counter = 1
 
     def damage(self, type_sprite):
         if type_sprite == 'bullet':
@@ -121,6 +122,11 @@ class Drunk(pygame.sprite.Sprite):
             self.rect.x -= 1
         else:
             self.speed_counter += 1
+
+        self.image = evil_images[f'drunk{self.animation_counter // 5}']
+        self.animation_counter += 1
+        if self.animation_counter // 5 == 8:
+            self.animation_counter = 0
 
 
 # класс министра
