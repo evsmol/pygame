@@ -178,11 +178,19 @@ def results_screen():
 def story_screen():
     print("[!] открытие окна введение в сюжет")
     intro_text = ["ВВЕДЕНИЕ В СЮЖЕТ", "",
-                  ""]
+                  "Уралмаш... Он возник на заре Советского Союза",
+                  "как соцгород будущего. Процветающий район,",
+                  "что расположился у «завода заводов» УЗТМ.",
+                  "Но на закате СССР его территория стала вотчиной",
+                  "одной из самых страшных преступных группировок.",
+                  "Говорят, стрельба по ночам была в те годы обычным",
+                  "делом. И хоть в наше время обстановка немного",
+                  "улучшилась и стабилизировалась, однако о резком",
+                  "спаде преступности утверждать ещё рано..."]
 
     fon = pygame.transform.scale(fon_images['story'], (width, height))
     screen.blit(fon, (0, 0))
-    start_font = pygame.font.Font(None, 20)
+    start_font = pygame.font.Font(None, 24)
     text_coord = 50
     for line in intro_text:
         string_rendered = start_font.render(line, 1, pygame.Color('white'))
@@ -208,11 +216,73 @@ def story_screen():
 def characters_screen():
     print("[!] открытие окна описания персонажей")
     intro_text = ["ПЕРСОНАЖИ", "",
-                  ""]
+                  "«1» — полицейский",
+                  "«2» — соточка",
+                  "«3» — ремонт дороги", "",
+                  "«4» — гопник",
+                  "«5» — попрошайка",
+                  "«6» — пьяница", "",
+                  "«7» — министр"]
+    cop_text = ["ПОЛИЦЕЙСКИЙ", "",
+                "«1» — полицейский",
+                "«2» — соточка",
+                "«3» — ремонт дороги", "",
+                "«4» — гопник",
+                "«5» — попрошайка",
+                "«6» — пьяница", "",
+                "«7» — министр"]
+    sotochka_text = ["СОТОЧКА", "",
+                     "«1» — полицейский",
+                     "«2» — соточка",
+                     "«3» — ремонт дороги", "",
+                     "«4» — гопник",
+                     "«5» — попрошайка",
+                     "«6» — пьяница", "",
+                     "«7» — министр"]
+    sign_text = ["РЕМОНТ ДОРОГИ", "",
+                 "«1» — полицейский",
+                 "«2» — соточка",
+                 "«3» — ремонт дороги", "",
+                 "«4» — гопник",
+                 "«5» — попрошайка",
+                 "«6» — пьяница", "",
+                 "«7» — министр"]
+    gop_text = ["ГОПНИК", "",
+                "«1» — полицейский",
+                "«2» — соточка",
+                "«3» — ремонт дороги", "",
+                "«4» — гопник",
+                "«5» — попрошайка",
+                "«6» — пьяница", "",
+                "«7» — министр"]
+    beggar_text = ["ПОПРОШАЙКА", "",
+                   "«1» — полицейский",
+                   "«2» — соточка",
+                   "«3» — ремонт дороги", "",
+                   "«4» — гопник",
+                   "«5» — попрошайка",
+                   "«6» — пьяница", "",
+                   "«7» — министр"]
+    drunk_text = ["ПЬЯНИЦА", "",
+                  "«1» — полицейский",
+                  "«2» — соточка",
+                  "«3» — ремонт дороги", "",
+                  "«4» — гопник",
+                  "«5» — попрошайка",
+                  "«6» — пьяница", "",
+                  "«7» — министр"]
+    minister_text = ["МИНИСТР", "",
+                     "«1» — полицейский",
+                     "«2» — соточка",
+                     "«3» — ремонт дороги", "",
+                     "«4» — гопник",
+                     "«5» — попрошайка",
+                     "«6» — пьяница", "",
+                     "«7» — министр"]
 
     fon = pygame.transform.scale(fon_images['characters'], (width, height))
     screen.blit(fon, (0, 0))
-    start_font = pygame.font.Font(None, 20)
+    start_font = pygame.font.Font(None, 24)
     text_coord = 50
     for line in intro_text:
         string_rendered = start_font.render(line, 1, pygame.Color('white'))
@@ -230,6 +300,110 @@ def characters_screen():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     start_screen()
+                if event.key == pygame.K_1:  # полицейский
+                    screen.blit(fon, (0, 0))
+                    text_coord = 50
+                    for line in cop_text:
+                        string_rendered = start_font.render(line, 1,
+                                                            pygame.Color(
+                                                                'white'))
+                        intro_rect = string_rendered.get_rect()
+                        text_coord += 10
+                        intro_rect.top = text_coord
+                        intro_rect.x = 10
+                        text_coord += intro_rect.height
+                        screen.blit(string_rendered, intro_rect)
+                if event.key == pygame.K_2:  # соточка
+                    screen.blit(fon, (0, 0))
+                    text_coord = 50
+                    for line in sotochka_text:
+                        string_rendered = start_font.render(line, 1,
+                                                            pygame.Color(
+                                                                'white'))
+                        intro_rect = string_rendered.get_rect()
+                        text_coord += 10
+                        intro_rect.top = text_coord
+                        intro_rect.x = 10
+                        text_coord += intro_rect.height
+                        screen.blit(string_rendered, intro_rect)
+                if event.key == pygame.K_3:  # ремонт дороги
+                    screen.blit(fon, (0, 0))
+                    text_coord = 50
+                    for line in sign_text:
+                        string_rendered = start_font.render(line, 1,
+                                                            pygame.Color(
+                                                                'white'))
+                        intro_rect = string_rendered.get_rect()
+                        text_coord += 10
+                        intro_rect.top = text_coord
+                        intro_rect.x = 10
+                        text_coord += intro_rect.height
+                        screen.blit(string_rendered, intro_rect)
+                if event.key == pygame.K_4:  # гопник
+                    screen.blit(fon, (0, 0))
+                    text_coord = 50
+                    for line in gop_text:
+                        string_rendered = start_font.render(line, 1,
+                                                            pygame.Color(
+                                                                'white'))
+                        intro_rect = string_rendered.get_rect()
+                        text_coord += 10
+                        intro_rect.top = text_coord
+                        intro_rect.x = 10
+                        text_coord += intro_rect.height
+                        screen.blit(string_rendered, intro_rect)
+                if event.key == pygame.K_5:  # попрошайка
+                    screen.blit(fon, (0, 0))
+                    text_coord = 50
+                    for line in beggar_text:
+                        string_rendered = start_font.render(line, 1,
+                                                            pygame.Color(
+                                                                'white'))
+                        intro_rect = string_rendered.get_rect()
+                        text_coord += 10
+                        intro_rect.top = text_coord
+                        intro_rect.x = 10
+                        text_coord += intro_rect.height
+                        screen.blit(string_rendered, intro_rect)
+                if event.key == pygame.K_6:  # пьяница
+                    screen.blit(fon, (0, 0))
+                    text_coord = 50
+                    for line in drunk_text:
+                        string_rendered = start_font.render(line, 1,
+                                                            pygame.Color(
+                                                                'white'))
+                        intro_rect = string_rendered.get_rect()
+                        text_coord += 10
+                        intro_rect.top = text_coord
+                        intro_rect.x = 10
+                        text_coord += intro_rect.height
+                        screen.blit(string_rendered, intro_rect)
+                if event.key == pygame.K_7:  # министр
+                    screen.blit(fon, (0, 0))
+                    text_coord = 50
+                    for line in minister_text:
+                        string_rendered = start_font.render(line, 1,
+                                                            pygame.Color(
+                                                                'white'))
+                        intro_rect = string_rendered.get_rect()
+                        text_coord += 10
+                        intro_rect.top = text_coord
+                        intro_rect.x = 10
+                        text_coord += intro_rect.height
+                        screen.blit(string_rendered, intro_rect)
+                if event.key == pygame.K_0:  # интро
+                    screen.blit(fon, (0, 0))
+                    text_coord = 50
+                    for line in intro_text:
+                        string_rendered = start_font.render(line, 1,
+                                                            pygame.Color(
+                                                                'white'))
+                        intro_rect = string_rendered.get_rect()
+                        text_coord += 10
+                        intro_rect.top = text_coord
+                        intro_rect.x = 10
+                        text_coord += intro_rect.height
+                        screen.blit(string_rendered, intro_rect)
         pygame.display.flip()
         clock.tick(fps)
 
