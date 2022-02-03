@@ -8,7 +8,7 @@ from config import all_sprites, tiles_group, evil_group, npc_group, \
     bullet_group, lose_group, stop_bullet_group
 from helpers import terminate, get_cell, save_result, get_results
 from classes import Tile, Cop, Sotochka, Sign, Gop, Drunk, Beggar, Lose, \
-    StopBullet, Minister
+    StopBullet, Еxcavator
 from levels import levels
 from images import fon_images
 
@@ -271,7 +271,7 @@ def characters_screen():
                   "«5» — попрошайка",
                   "«6» — пьяница", "",
                   "«7» — министр"]
-    minister_text = ["МИНИСТР", "",
+    excavator_text = ["ЭКСКАВАТОР", "",
                      "«1» — полицейский",
                      "«2» — соточка",
                      "«3» — ремонт дороги", "",
@@ -381,7 +381,7 @@ def characters_screen():
                 if event.key == pygame.K_7:  # министр
                     screen.blit(fon, (0, 0))
                     text_coord = 50
-                    for line in minister_text:
+                    for line in excavator_text:
                         string_rendered = start_font.render(line, 1,
                                                             pygame.Color(
                                                                 'white'))
@@ -542,7 +542,7 @@ def game_screen():
 
         # вызов министра
         if not evil_group:
-            minister = Minister(9, 4)
+            excavator = Еxcavator(9, 4)
             apocalypse = True
 
         # столкновения
@@ -556,7 +556,7 @@ def game_screen():
                                                          stop_bullet_group,
                                                          False, False)
         if apocalypse:
-            minister_collide = pygame.sprite.spritecollide(minister,
+            excavator_collide = pygame.sprite.spritecollide(excavator,
                                                            npc_group, True)
 
         # обработка столкновений

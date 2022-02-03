@@ -58,5 +58,5 @@ evil_images = {
     'drunk6': load_image('drunk6.png'),
     'drunk7': load_image('drunk7.png'),
 
-    'minister': load_image('minister.png')
+    'excavator': load_image('excavator.png')
 }

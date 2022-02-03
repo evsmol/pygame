@@ -141,11 +141,11 @@ class Drunk(pygame.sprite.Sprite):
             self.animation_counter = 0
 
 
-# класс министра
-class Minister(pygame.sprite.Sprite):
+# класс экскаватора
+class Еxcavator(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(evil_group, all_sprites)
-        self.image = evil_images['minister']
+        self.image = evil_images['excavator']
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
