@@ -43,7 +43,7 @@ class Gop(pygame.sprite.Sprite):
         if self.health <= 0:
             self.kill()
             POINTS[0] += 2000
-            MONEY[0] += 200
+            MONEY[0] += 100
             print('[#] гопник убит')
 
     def update(self):
@@ -84,7 +84,7 @@ class Beggar(pygame.sprite.Sprite):
         if self.health <= 0:
             self.kill()
             POINTS[0] += 1000
-            MONEY[0] += 100
+            MONEY[0] += 50
             print('[#] попрошайка убит')
 
     def update(self):
@@ -125,7 +125,7 @@ class Drunk(pygame.sprite.Sprite):
         if self.health <= 0:
             self.kill()
             POINTS[0] += 3000
-            MONEY[0] += 300
+            MONEY[0] += 150
             print('[#] пьяница убит')
 
     def update(self):
@@ -174,6 +174,8 @@ class Cop(pygame.sprite.Sprite):
         self.health -= 1
         if self.health == 0:
             self.kill()
+            if POINTS[0] >= 1000:
+                POINTS[0] -= 1000
             BOARD[self.y - 2][self.x] = 0
             print('[#] полицейский убит')
 
@@ -229,6 +231,8 @@ class Sotochka(pygame.sprite.Sprite):
 
     def damage(self):
         self.kill()
+        if POINTS[0] >= 100:
+            POINTS[0] -= 100
         BOARD[self.y - 2][self.x] = 0
         print('[#] соточку забрали')
 
@@ -252,6 +256,8 @@ class Sign(pygame.sprite.Sprite):
         self.health -= 1
         if self.health == 0:
             self.kill()
+            if POINTS[0] >= 1000:
+                POINTS[0] -= 1000
             BOARD[self.y - 2][self.x] = 0
             print('[#] дорогу починили')
 
