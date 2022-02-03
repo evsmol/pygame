@@ -6,11 +6,11 @@ from config import LEVEL, MONEY, POINTS, BOARD
 from config import screen, width, height, clock, fps, tile_width, tile_height
 from config import all_sprites, tiles_group, evil_group, npc_group, \
     bullet_group, lose_group, stop_bullet_group
-from helpers import terminate, get_cell, save_result, get_results
+from helpers import terminate, get_cell, save_result, get_results, print_text
 from classes import Tile, Cop, Sotochka, Sign, Gop, Drunk, Beggar, Lose, \
     StopBullet, Еxcavator
 from levels import levels
-from images import fon_images
+from images import fon_images, evil_images, npc_images, tile_images
 
 
 # стартовое окно
@@ -222,76 +222,53 @@ def characters_screen():
                   "«4» — гопник",
                   "«5» — попрошайка",
                   "«6» — пьяница", "",
-                  "«7» — министр"]
-    cop_text = ["ПОЛИЦЕЙСКИЙ", "",
-                "«1» — полицейский",
-                "«2» — соточка",
-                "«3» — ремонт дороги", "",
-                "«4» — гопник",
-                "«5» — попрошайка",
-                "«6» — пьяница", "",
-                "«7» — министр"]
-    sotochka_text = ["СОТОЧКА", "",
-                     "«1» — полицейский",
-                     "«2» — соточка",
-                     "«3» — ремонт дороги", "",
-                     "«4» — гопник",
-                     "«5» — попрошайка",
-                     "«6» — пьяница", "",
-                     "«7» — министр"]
-    sign_text = ["РЕМОНТ ДОРОГИ", "",
-                 "«1» — полицейский",
-                 "«2» — соточка",
-                 "«3» — ремонт дороги", "",
-                 "«4» — гопник",
-                 "«5» — попрошайка",
-                 "«6» — пьяница", "",
-                 "«7» — министр"]
-    gop_text = ["ГОПНИК", "",
-                "«1» — полицейский",
-                "«2» — соточка",
-                "«3» — ремонт дороги", "",
-                "«4» — гопник",
-                "«5» — попрошайка",
-                "«6» — пьяница", "",
-                "«7» — министр"]
-    beggar_text = ["ПОПРОШАЙКА", "",
-                   "«1» — полицейский",
-                   "«2» — соточка",
-                   "«3» — ремонт дороги", "",
-                   "«4» — гопник",
-                   "«5» — попрошайка",
-                   "«6» — пьяница", "",
-                   "«7» — министр"]
-    drunk_text = ["ПЬЯНИЦА", "",
-                  "«1» — полицейский",
-                  "«2» — соточка",
-                  "«3» — ремонт дороги", "",
-                  "«4» — гопник",
-                  "«5» — попрошайка",
-                  "«6» — пьяница", "",
-                  "«7» — министр"]
-    excavator_text = ["ЭКСКАВАТОР", "",
-                     "«1» — полицейский",
-                     "«2» — соточка",
-                     "«3» — ремонт дороги", "",
-                     "«4» — гопник",
-                     "«5» — попрошайка",
-                     "«6» — пьяница", "",
-                     "«7» — министр"]
+                  "«7» — экскаватор"]
+    cop_text = ["ПОЛИЦЕЙСКИЙ", "", "", "",
+                "Здоровье: 3, Урон пулей: 1, Урон: 2", "",
+                "Каждый полицейский в районе старается",
+                "добросовестно выполнять свою нелёгкую работу.",
+                "Следует уважать их труд.", "",
+                "«0» — вернуться к списку персонажей"]
+    sotochka_text = ["СОТОЧКА", "", "", "",
+                     "Здоровье: 0, Урон: 0", "",
+                     "Деньги на полу не валяются... Но, может, если мы",
+                     "оставим на дороге хотя бы соточку, это отвлечёт их?",
+                     "", "",
+                     "«0» — вернуться к списку персонажей"]
+    sign_text = ["РЕМОНТ ДОРОГИ", "", "", "",
+                 "Здоровье: 7, Урон: 0", "",
+                 "Чтобы задержать толпу, нужно перекрыть дороги!",
+                 "Хотя, возможно, мы лишь этим оправдываем себя...",
+                 "", "",
+                 "«0» — вернуться к списку персонажей"]
+    gop_text = ["ГОПНИК", "", "", "",
+                "Здоровье: 5, Урон: 1", "",
+                "Крайне не рекомендую связываться с ними.",
+                "Хоть их влиянию подвержена большая часть ",
+                "населения Уралмаша, не стоит вступать в их ряды.", "",
+                "«0» — вернуться к списку персонажей"]
+    beggar_text = ["ПОПРОШАЙКА", "", "", "",
+                   "Здоровье: 3, Урон: 1", "",
+                   "Не доверя...",
+                   "...",
+                   "...", "",
+                   "«0» — вернуться к списку персонажей"]
+    drunk_text = ["ПЬЯНИЦА", "", "", "",
+                  "Здоровье: 10, Урон: 1", "",
+                  "Он же «Синяк». Обладатель подозрительной",
+                  "везучести. Много пьёт и всегда простужен.",
+                  "Характер скверный. Не женат.", "",
+                  "«0» — вернуться к списку персонажей"]
+    excavator_text = ["ЭКСКАВАТОР", "", "", "",
+                      "Здоровье: <...>, Урон: <...>", "",
+                      "Не забывайте, что недалеко УЗТМ.",
+                      "Кто-нибудь выяснил, что там производят?",
+                      "Я слышал, что шага...", "",
+                      "«0» — вернуться к списку персонажей"]
 
     fon = pygame.transform.scale(fon_images['characters'], (width, height))
     screen.blit(fon, (0, 0))
-    start_font = pygame.font.Font(None, 24)
-    text_coord = 50
-    for line in intro_text:
-        string_rendered = start_font.render(line, 1, pygame.Color('white'))
-        intro_rect = string_rendered.get_rect()
-        text_coord += 10
-        intro_rect.top = text_coord
-        intro_rect.x = 10
-        text_coord += intro_rect.height
-        screen.blit(string_rendered, intro_rect)
+    print_text(intro_text)
 
     while True:
         for event in pygame.event.get():
@@ -302,108 +279,42 @@ def characters_screen():
                     start_screen()
                 if event.key == pygame.K_1:  # полицейский
                     screen.blit(fon, (0, 0))
-                    text_coord = 50
-                    for line in cop_text:
-                        string_rendered = start_font.render(line, 1,
-                                                            pygame.Color(
-                                                                'white'))
-                        intro_rect = string_rendered.get_rect()
-                        text_coord += 10
-                        intro_rect.top = text_coord
-                        intro_rect.x = 10
-                        text_coord += intro_rect.height
-                        screen.blit(string_rendered, intro_rect)
+                    screen.blit(tile_images['level1'], (30, 100))
+                    screen.blit(npc_images['cop0'], (30, 100))
+                    print_text(cop_text)
                 if event.key == pygame.K_2:  # соточка
                     screen.blit(fon, (0, 0))
-                    text_coord = 50
-                    for line in sotochka_text:
-                        string_rendered = start_font.render(line, 1,
-                                                            pygame.Color(
-                                                                'white'))
-                        intro_rect = string_rendered.get_rect()
-                        text_coord += 10
-                        intro_rect.top = text_coord
-                        intro_rect.x = 10
-                        text_coord += intro_rect.height
-                        screen.blit(string_rendered, intro_rect)
+                    screen.blit(tile_images['level1'], (30, 100))
+                    screen.blit(npc_images['sotochka'], (30, 100))
+                    print_text(sotochka_text)
                 if event.key == pygame.K_3:  # ремонт дороги
                     screen.blit(fon, (0, 0))
-                    text_coord = 50
-                    for line in sign_text:
-                        string_rendered = start_font.render(line, 1,
-                                                            pygame.Color(
-                                                                'white'))
-                        intro_rect = string_rendered.get_rect()
-                        text_coord += 10
-                        intro_rect.top = text_coord
-                        intro_rect.x = 10
-                        text_coord += intro_rect.height
-                        screen.blit(string_rendered, intro_rect)
+                    screen.blit(tile_images['level1'], (30, 100))
+                    screen.blit(npc_images['sign'], (30, 100))
+                    print_text(sign_text)
                 if event.key == pygame.K_4:  # гопник
                     screen.blit(fon, (0, 0))
-                    text_coord = 50
-                    for line in gop_text:
-                        string_rendered = start_font.render(line, 1,
-                                                            pygame.Color(
-                                                                'white'))
-                        intro_rect = string_rendered.get_rect()
-                        text_coord += 10
-                        intro_rect.top = text_coord
-                        intro_rect.x = 10
-                        text_coord += intro_rect.height
-                        screen.blit(string_rendered, intro_rect)
+                    screen.blit(tile_images['level1'], (30, 100))
+                    screen.blit(evil_images['gop0'], (30, 100))
+                    print_text(gop_text)
                 if event.key == pygame.K_5:  # попрошайка
                     screen.blit(fon, (0, 0))
-                    text_coord = 50
-                    for line in beggar_text:
-                        string_rendered = start_font.render(line, 1,
-                                                            pygame.Color(
-                                                                'white'))
-                        intro_rect = string_rendered.get_rect()
-                        text_coord += 10
-                        intro_rect.top = text_coord
-                        intro_rect.x = 10
-                        text_coord += intro_rect.height
-                        screen.blit(string_rendered, intro_rect)
+                    screen.blit(tile_images['level1'], (30, 100))
+                    screen.blit(evil_images['beggar0'], (30, 100))
+                    print_text(beggar_text)
                 if event.key == pygame.K_6:  # пьяница
                     screen.blit(fon, (0, 0))
-                    text_coord = 50
-                    for line in drunk_text:
-                        string_rendered = start_font.render(line, 1,
-                                                            pygame.Color(
-                                                                'white'))
-                        intro_rect = string_rendered.get_rect()
-                        text_coord += 10
-                        intro_rect.top = text_coord
-                        intro_rect.x = 10
-                        text_coord += intro_rect.height
-                        screen.blit(string_rendered, intro_rect)
-                if event.key == pygame.K_7:  # министр
+                    screen.blit(tile_images['level1'], (30, 100))
+                    screen.blit(evil_images['drunk0'], (30, 100))
+                    print_text(drunk_text)
+                if event.key == pygame.K_7:  # экскаватор
                     screen.blit(fon, (0, 0))
-                    text_coord = 50
-                    for line in excavator_text:
-                        string_rendered = start_font.render(line, 1,
-                                                            pygame.Color(
-                                                                'white'))
-                        intro_rect = string_rendered.get_rect()
-                        text_coord += 10
-                        intro_rect.top = text_coord
-                        intro_rect.x = 10
-                        text_coord += intro_rect.height
-                        screen.blit(string_rendered, intro_rect)
+                    screen.blit(tile_images['level1'], (30, 100))
+                    screen.blit(evil_images['excavator'], (30, 100))
+                    print_text(excavator_text)
                 if event.key == pygame.K_0:  # интро
                     screen.blit(fon, (0, 0))
-                    text_coord = 50
-                    for line in intro_text:
-                        string_rendered = start_font.render(line, 1,
-                                                            pygame.Color(
-                                                                'white'))
-                        intro_rect = string_rendered.get_rect()
-                        text_coord += 10
-                        intro_rect.top = text_coord
-                        intro_rect.x = 10
-                        text_coord += intro_rect.height
-                        screen.blit(string_rendered, intro_rect)
+                    print_text(intro_text)
         pygame.display.flip()
         clock.tick(fps)
 
@@ -506,7 +417,6 @@ def game_screen():
                     image_panel[1] = 'data/sotochka.png'
                     image_panel[2] = 'data/sign_blur.png'
                 if event.key == pygame.K_ESCAPE:
-                    running = False
                     for sprite in all_sprites:
                         sprite.kill()
 
@@ -557,7 +467,7 @@ def game_screen():
                                                          False, False)
         if apocalypse:
             excavator_collide = pygame.sprite.spritecollide(excavator,
-                                                           npc_group, True)
+                                                            npc_group, True)
 
         # обработка столкновений
         for key, value in bullet_collide.items():

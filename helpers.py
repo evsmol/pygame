@@ -5,7 +5,7 @@ import sys
 import os
 import sqlite3
 
-from config import tile_width, tile_height
+from config import tile_width, tile_height, screen, width, height
 from config import POINTS, LEVEL
 
 
@@ -103,3 +103,17 @@ def get_results():
     res_last = (res_last[0], res_last[1], last_place)  # уровень, очки, место
 
     return res_lev1[0], res_lev2[0], res_lev3[0], res_last
+
+
+# отобразить текст о персонаже
+def print_text(text):
+    font = pygame.font.Font(None, 24)
+    text_coord = 50
+    for line in text:
+        string_rendered = font.render(line, 1, pygame.Color('white'))
+        rect = string_rendered.get_rect()
+        text_coord += 10
+        rect.top = text_coord
+        rect.x = 10
+        text_coord += rect.height
+        screen.blit(string_rendered, rect)
