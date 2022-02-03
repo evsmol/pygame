@@ -15,13 +15,7 @@ LEVEL = [0]  # выбранный уровень
 BOARD = [[0] * 9 for x in range(5)]  # NPC на поле
 MONEY = [3000]  # валюта
 POINTS = [0]  # очки
-
-# музыка
-music = True  # состояние музыки
-# sound_start = pygame.mixer.Sound('data/start.mp3')
-# sound_start.set_volume(0.2)
-# sound_main = pygame.mixer.Sound('data/main.mp3')
-# sound_main.set_volume(0.2)
+MUSIC = [False]  # музыка
 
 # группы спрайтов
 all_sprites = pygame.sprite.Group()
@@ -31,3 +25,9 @@ npc_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
 lose_group = pygame.sprite.Group()
 stop_bullet_group = pygame.sprite.Group()
+
+
+# инициализация музыки
+sound_start = ['data/start.mp3']
+sound_characters = ['data/characters.mp3']
+sound_main = ['data/main.mp3']

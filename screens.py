@@ -2,10 +2,11 @@
 
 import pygame
 
-from config import LEVEL, MONEY, POINTS, BOARD
+from config import LEVEL, MONEY, POINTS, BOARD, MUSIC
 from config import screen, width, height, clock, fps, tile_width, tile_height
 from config import all_sprites, tiles_group, evil_group, npc_group, \
     bullet_group, lose_group, stop_bullet_group
+from config import sound_main, sound_start, sound_characters
 from helpers import terminate, get_cell, save_result, get_results, print_text
 from classes import Tile, Cop, Sotochka, Sign, Gop, Drunk, Beggar, Lose, \
     StopBullet, Еxcavator
@@ -24,6 +25,13 @@ def start_screen():
                   "Персонажи — «F4»", "",
                   "Приятной игры!"]
 
+    # музыка
+    if not MUSIC[0]:
+        sound_start[0] = pygame.mixer.Sound('data/start.mp3')
+        sound_start[0].set_volume(0.2)
+        sound_start[0].play(-1)
+        MUSIC[0] = True
+
     fon = pygame.transform.scale(fon_images['start'], (width, height))
     screen.blit(fon, (0, 0))
     start_font = pygame.font.Font(None, 30)
@@ -36,8 +44,6 @@ def start_screen():
         intro_rect.x = 10
         text_coord += intro_rect.height
         screen.blit(string_rendered, intro_rect)
-
-    # sound_start.play()
 
     while True:
         for event in pygame.event.get():
@@ -60,10 +66,19 @@ def start_screen():
                 elif event.key == pygame.K_F3:
                     story_screen()
                 elif event.key == pygame.K_F4:
+                    sound_start[0].stop()
+                    MUSIC[0] = False
                     characters_screen()
+                if event.key == pygame.K_SPACE:
+                    if MUSIC[0]:
+                        MUSIC[0] = False
+                        sound_start[0].stop()
+                    elif not MUSIC[0]:
+                        MUSIC[0] = True
+                        sound_start[0].play()
             if LEVEL[0]:
-                # sound_start.stop()
-                # sound_main.play()
+                sound_start[0].stop()
+                MUSIC[0] = False
                 game_screen()  # начинаем игру
         pygame.display.flip()
         clock.tick(fps)
@@ -98,6 +113,13 @@ def guide_screen():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     start_screen()
+                if event.key == pygame.K_SPACE:
+                    if MUSIC[0]:
+                        MUSIC[0] = False
+                        sound_start[0].stop()
+                    elif not MUSIC[0]:
+                        MUSIC[0] = True
+                        sound_start[0].play()
         pygame.display.flip()
         clock.tick(fps)
 
@@ -170,6 +192,13 @@ def results_screen():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     start_screen()
+                if event.key == pygame.K_SPACE:
+                    if MUSIC[0]:
+                        MUSIC[0] = False
+                        sound_start[0].stop()
+                    elif not MUSIC[0]:
+                        MUSIC[0] = True
+                        sound_start[0].play()
         pygame.display.flip()
         clock.tick(fps)
 
@@ -208,6 +237,13 @@ def story_screen():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     start_screen()
+                if event.key == pygame.K_SPACE:
+                    if MUSIC[0]:
+                        MUSIC[0] = False
+                        sound_start[0].stop()
+                    elif not MUSIC[0]:
+                        MUSIC[0] = True
+                        sound_start[0].play()
         pygame.display.flip()
         clock.tick(fps)
 
@@ -266,6 +302,13 @@ def characters_screen():
                       "Я слышал, что шага...", "",
                       "«0» — вернуться к списку персонажей"]
 
+    # музыка
+    if not MUSIC[0]:
+        sound_characters[0] = pygame.mixer.Sound('data/characters.mp3')
+        sound_characters[0].set_volume(0.2)
+        sound_characters[0].play(-1)
+        MUSIC[0] = True
+
     fon = pygame.transform.scale(fon_images['characters'], (width, height))
     screen.blit(fon, (0, 0))
     print_text(intro_text)
@@ -276,6 +319,8 @@ def characters_screen():
                 terminate()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    sound_characters[0].stop()
+                    MUSIC[0] = False
                     start_screen()
                 if event.key == pygame.K_1:  # полицейский
                     screen.blit(fon, (0, 0))
@@ -315,6 +360,13 @@ def characters_screen():
                 if event.key == pygame.K_0:  # интро
                     screen.blit(fon, (0, 0))
                     print_text(intro_text)
+                if event.key == pygame.K_SPACE:
+                    if MUSIC[0]:
+                        MUSIC[0] = False
+                        sound_characters[0].stop()
+                    elif not MUSIC[0]:
+                        MUSIC[0] = True
+                        sound_characters[0].play()
         pygame.display.flip()
         clock.tick(fps)
 
@@ -363,6 +415,13 @@ def game_screen():
         for x in range(9):
             Lose(-1, y + 2)  # линия проигрыша
             StopBullet(10, y + 2)  # стоп пулям в конце поля
+
+    # музыка
+    if not MUSIC[0]:
+        sound_main[0] = pygame.mixer.Sound('data/main.mp3')
+        sound_main[0].set_volume(0.2)
+        sound_main[0].play(-1)
+        MUSIC[0] = True
 
     running = True
     apocalypse = False  # вызов министра
@@ -416,12 +475,22 @@ def game_screen():
                     image_panel[0] = 'data/cop0.png'
                     image_panel[1] = 'data/sotochka.png'
                     image_panel[2] = 'data/sign_blur.png'
+                if event.key == pygame.K_SPACE:
+                    if MUSIC[0]:
+                        MUSIC[0] = False
+                        sound_main[0].stop()
+                    elif not MUSIC[0]:
+                        MUSIC[0] = True
+                        sound_main[0].play()
                 if event.key == pygame.K_ESCAPE:
                     for sprite in all_sprites:
                         sprite.kill()
 
                     # сохранение результата
                     save_result()
+
+                    sound_main[0].stop()
+                    MUSIC[0] = False
 
                     LEVEL[0] = 0
                     print("[!] конец игры")
@@ -466,8 +535,7 @@ def game_screen():
                                                          stop_bullet_group,
                                                          False, False)
         if apocalypse:
-            excavator_collide = pygame.sprite.spritecollide(excavator,
-                                                            npc_group, True)
+            pygame.sprite.spritecollide(excavator, npc_group, True)
 
         # обработка столкновений
         for key, value in bullet_collide.items():
@@ -493,6 +561,9 @@ def game_screen():
 
             # сохранение результата
             save_result()
+
+            sound_main[0].stop()
+            MUSIC[0] = False
 
             LEVEL[0] = 0
             print("[!] конец игры")
