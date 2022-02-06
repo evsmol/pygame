@@ -26,7 +26,7 @@ def start_screen():
                   "Приятной игры!"]
 
     # музыка
-    if not MUSIC[0]:
+    if not MUSIC[0] and MUSIC[1]:
         sound_start[0] = pygame.mixer.Sound('data/start.mp3')
         sound_start[0].set_volume(0.2)
         sound_start[0].play(-1)
@@ -70,10 +70,12 @@ def start_screen():
                     MUSIC[0] = False
                     characters_screen()
                 if event.key == pygame.K_SPACE:
-                    if MUSIC[0]:
+                    if MUSIC[1]:
+                        MUSIC[1] = False
                         MUSIC[0] = False
                         sound_start[0].stop()
-                    elif not MUSIC[0]:
+                    elif not MUSIC[1]:
+                        MUSIC[1] = True
                         MUSIC[0] = True
                         sound_start[0].play()
             if LEVEL[0]:
@@ -114,10 +116,12 @@ def guide_screen():
                 if event.key == pygame.K_ESCAPE:
                     start_screen()
                 if event.key == pygame.K_SPACE:
-                    if MUSIC[0]:
+                    if MUSIC[1]:
+                        MUSIC[1] = False
                         MUSIC[0] = False
                         sound_start[0].stop()
                     elif not MUSIC[0]:
+                        MUSIC[1] = True
                         MUSIC[0] = True
                         sound_start[0].play()
         pygame.display.flip()
@@ -194,9 +198,11 @@ def results_screen():
                     start_screen()
                 if event.key == pygame.K_SPACE:
                     if MUSIC[0]:
+                        MUSIC[1] = False
                         MUSIC[0] = False
                         sound_start[0].stop()
                     elif not MUSIC[0]:
+                        MUSIC[1] = True
                         MUSIC[0] = True
                         sound_start[0].play()
         pygame.display.flip()
@@ -239,9 +245,11 @@ def story_screen():
                     start_screen()
                 if event.key == pygame.K_SPACE:
                     if MUSIC[0]:
+                        MUSIC[1] = False
                         MUSIC[0] = False
                         sound_start[0].stop()
                     elif not MUSIC[0]:
+                        MUSIC[1] = True
                         MUSIC[0] = True
                         sound_start[0].play()
         pygame.display.flip()
@@ -303,10 +311,10 @@ def characters_screen():
                       "«0» — вернуться к списку персонажей"]
 
     # музыка
-    if not MUSIC[0]:
-        sound_characters[0] = pygame.mixer.Sound('data/characters.mp3')
-        sound_characters[0].set_volume(0.2)
-        sound_characters[0].play(-1)
+    sound_characters[0] = pygame.mixer.Sound('data/characters.mp3')
+    sound_characters[0].set_volume(0.2)
+    sound_characters[0].play(-1)
+    if not MUSIC[0] and MUSIC[1]:
         MUSIC[0] = True
 
     fon = pygame.transform.scale(fon_images['characters'], (width, height))
@@ -362,9 +370,11 @@ def characters_screen():
                     print_text(intro_text)
                 if event.key == pygame.K_SPACE:
                     if MUSIC[0]:
+                        MUSIC[1] = False
                         MUSIC[0] = False
                         sound_characters[0].stop()
                     elif not MUSIC[0]:
+                        MUSIC[1] = True
                         MUSIC[0] = True
                         sound_characters[0].play()
         pygame.display.flip()
@@ -417,10 +427,10 @@ def game_screen():
             StopBullet(10, y + 2)  # стоп пулям в конце поля
 
     # музыка
-    if not MUSIC[0]:
-        sound_main[0] = pygame.mixer.Sound('data/main.mp3')
-        sound_main[0].set_volume(0.2)
-        sound_main[0].play(-1)
+    sound_main[0] = pygame.mixer.Sound('data/main.mp3')
+    sound_main[0].set_volume(0.2)
+    sound_main[0].play(-1)
+    if not MUSIC[0] and MUSIC[1]:
         MUSIC[0] = True
 
     running = True
@@ -477,9 +487,11 @@ def game_screen():
                     image_panel[2] = 'data/sign_blur.png'
                 if event.key == pygame.K_SPACE:
                     if MUSIC[0]:
+                        MUSIC[1] = False
                         MUSIC[0] = False
                         sound_main[0].stop()
                     elif not MUSIC[0]:
+                        MUSIC[1] = True
                         MUSIC[0] = True
                         sound_main[0].play()
                 if event.key == pygame.K_ESCAPE:
@@ -555,7 +567,6 @@ def game_screen():
             key.kill()
 
         if lose_collide:
-            running = False
             for sprite in all_sprites:
                 sprite.kill()
 
