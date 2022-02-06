@@ -77,7 +77,7 @@ def start_screen():
                     elif not MUSIC[1]:
                         MUSIC[1] = True
                         MUSIC[0] = True
-                        sound_start[0].play()
+                        sound_start[0].play(-1)
             if LEVEL[0]:
                 sound_start[0].stop()
                 MUSIC[0] = False
@@ -123,7 +123,7 @@ def guide_screen():
                     elif not MUSIC[0]:
                         MUSIC[1] = True
                         MUSIC[0] = True
-                        sound_start[0].play()
+                        sound_start[0].play(-1)
         pygame.display.flip()
         clock.tick(fps)
 
@@ -204,7 +204,7 @@ def results_screen():
                     elif not MUSIC[0]:
                         MUSIC[1] = True
                         MUSIC[0] = True
-                        sound_start[0].play()
+                        sound_start[0].play(-1)
         pygame.display.flip()
         clock.tick(fps)
 
@@ -251,7 +251,7 @@ def story_screen():
                     elif not MUSIC[0]:
                         MUSIC[1] = True
                         MUSIC[0] = True
-                        sound_start[0].play()
+                        sound_start[0].play(-1)
         pygame.display.flip()
         clock.tick(fps)
 
@@ -313,8 +313,8 @@ def characters_screen():
     # музыка
     sound_characters[0] = pygame.mixer.Sound('data/characters.mp3')
     sound_characters[0].set_volume(0.2)
-    sound_characters[0].play(-1)
     if not MUSIC[0] and MUSIC[1]:
+        sound_characters[0].play(-1)
         MUSIC[0] = True
 
     fon = pygame.transform.scale(fon_images['characters'], (width, height))
@@ -376,7 +376,7 @@ def characters_screen():
                     elif not MUSIC[0]:
                         MUSIC[1] = True
                         MUSIC[0] = True
-                        sound_characters[0].play()
+                        sound_characters[0].play(-1)
         pygame.display.flip()
         clock.tick(fps)
 
@@ -429,8 +429,8 @@ def game_screen():
     # музыка
     sound_main[0] = pygame.mixer.Sound('data/main.mp3')
     sound_main[0].set_volume(0.2)
-    sound_main[0].play(-1)
     if not MUSIC[0] and MUSIC[1]:
+        sound_main[0].play(-1)
         MUSIC[0] = True
 
     running = True
@@ -493,7 +493,7 @@ def game_screen():
                     elif not MUSIC[0]:
                         MUSIC[1] = True
                         MUSIC[0] = True
-                        sound_main[0].play()
+                        sound_main[0].play(-1)
                 if event.key == pygame.K_ESCAPE:
                     for sprite in all_sprites:
                         sprite.kill()
