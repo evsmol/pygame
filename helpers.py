@@ -5,7 +5,7 @@ import sys
 import os
 import sqlite3
 
-from config import tile_width, tile_height, screen, width, height
+from config import tile_width, tile_height, screen
 from config import POINTS, LEVEL
 
 
